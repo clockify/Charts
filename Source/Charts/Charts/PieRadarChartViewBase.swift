@@ -73,7 +73,7 @@ open class PieRadarChartViewBase: ChartViewBase
     
     internal override func calcMinMax()
     {
-        /*_xAxis.axisRange = Double((data?.xVals.count ?? 0) - 1)*/
+        /*_xAxis.axisRange = Double((_data?.xVals.count ?? 0) - 1)*/
     }
     
     open override var maxVisibleCount: Int
@@ -88,7 +88,7 @@ open class PieRadarChartViewBase: ChartViewBase
     {
         calcMinMax()
         
-        if let data = data
+        if let data = _data , _legend !== nil
         {
             legendRenderer.computeLegend(data: data)
         }
@@ -105,20 +105,20 @@ open class PieRadarChartViewBase: ChartViewBase
         var legendBottom = CGFloat(0.0)
         var legendTop = CGFloat(0.0)
 
-        if legend.enabled && !legend.drawInside
+        if _legend != nil && _legend.enabled && !_legend.drawInside
         {
-            let fullLegendWidth = min(legend.neededWidth, viewPortHandler.chartWidth * legend.maxSizePercent)
+            let fullLegendWidth = min(_legend.neededWidth, _viewPortHandler.chartWidth * _legend.maxSizePercent)
             
-            switch legend.orientation
+            switch _legend.orientation
             {
             case .vertical:
                 
                 var xLegendOffset: CGFloat = 0.0
                 
-                if legend.horizontalAlignment == .left
-                    || legend.horizontalAlignment == .right
+                if _legend.horizontalAlignment == .left
+                    || _legend.horizontalAlignment == .right
                 {
-                    if legend.verticalAlignment == .center
+                    if _legend.verticalAlignment == .center
                     {
                         // this is the space between the legend and the chart
                         let spacing = CGFloat(13.0)
@@ -131,11 +131,11 @@ open class PieRadarChartViewBase: ChartViewBase
                         let spacing = CGFloat(8.0)
                         
                         let legendWidth = fullLegendWidth + spacing
-                        let legendHeight = legend.neededHeight + legend.textHeightMax
+                        let legendHeight = _legend.neededHeight + _legend.textHeightMax
                         
                         let c = self.midPoint
                         
-                        let bottomX = legend.horizontalAlignment == .right
+                        let bottomX = _legend.horizontalAlignment == .right
                             ? self.bounds.width - legendWidth + 15.0
                             : legendWidth - 15.0
                         let bottomY = legendHeight + 15
@@ -160,7 +160,7 @@ open class PieRadarChartViewBase: ChartViewBase
                     }
                 }
                 
-                switch legend.horizontalAlignment
+                switch _legend.horizontalAlignment
                 {
                 case .left:
                     legendLeft = xLegendOffset
@@ -170,13 +170,13 @@ open class PieRadarChartViewBase: ChartViewBase
                     
                 case .center:
                     
-                    switch legend.verticalAlignment
+                    switch _legend.verticalAlignment
                     {
                     case .top:
-                        legendTop = min(legend.neededHeight, viewPortHandler.chartHeight * legend.maxSizePercent)
+                        legendTop = min(_legend.neededHeight, _viewPortHandler.chartHeight * _legend.maxSizePercent)
                         
                     case .bottom:
-                        legendBottom = min(legend.neededHeight, viewPortHandler.chartHeight * legend.maxSizePercent)
+                        legendBottom = min(_legend.neededHeight, _viewPortHandler.chartHeight * _legend.maxSizePercent)
                         
                     default:
                         break
@@ -187,8 +187,8 @@ open class PieRadarChartViewBase: ChartViewBase
                 
                 var yLegendOffset: CGFloat = 0.0
                 
-                if legend.verticalAlignment == .top
-                    || legend.verticalAlignment == .bottom
+                if _legend.verticalAlignment == .top
+                    || _legend.verticalAlignment == .bottom
                 {
                     // It's possible that we do not need this offset anymore as it
                     //   is available through the extraOffsets, but changing it can mean
@@ -196,11 +196,11 @@ open class PieRadarChartViewBase: ChartViewBase
                     let yOffset = self.requiredLegendOffset
                     
                     yLegendOffset = min(
-                        legend.neededHeight + yOffset,
-                        viewPortHandler.chartHeight * legend.maxSizePercent)
+                        _legend.neededHeight + yOffset,
+                        _viewPortHandler.chartHeight * _legend.maxSizePercent)
                 }
                 
-                switch legend.verticalAlignment
+                switch _legend.verticalAlignment
                 {
                 case .top:
                     
@@ -243,7 +243,7 @@ open class PieRadarChartViewBase: ChartViewBase
         let offsetRight = max(minOffset, legendRight)
         let offsetBottom = max(minOffset, max(self.requiredBaseOffset, legendBottom))
 
-        viewPortHandler.restrainViewPort(offsetLeft: offsetLeft, offsetTop: offsetTop, offsetRight: offsetRight, offsetBottom: offsetBottom)
+        _viewPortHandler.restrainViewPort(offsetLeft: offsetLeft, offsetTop: offsetTop, offsetRight: offsetRight, offsetBottom: offsetBottom)
     }
 
     /// - Returns: The angle relative to the chart center for the given point on the chart in degrees.
@@ -353,7 +353,7 @@ open class PieRadarChartViewBase: ChartViewBase
     /// The diameter of the pie- or radar-chart
     @objc open var diameter: CGFloat
     {
-        var content = viewPortHandler.contentRect
+        var content = _viewPortHandler.contentRect
         content.origin.x += extraLeftOffset
         content.origin.y += extraTopOffset
         content.size.width -= extraLeftOffset + extraRightOffset
@@ -678,6 +678,7 @@ open class PieRadarChartViewBase: ChartViewBase
 
         // Remove samples older than our sample time - 1 seconds
         // while keeping at least one sample
+        
         var i = 0, count = velocitySamples.count
         while (i < count - 2)
         {

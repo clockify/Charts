@@ -13,7 +13,7 @@ import Foundation
 import CoreGraphics
 
 @objc(ChartMarkerImage)
-open class MarkerImage: NSObject, Marker
+open class MarkerImage: NSObject, IMarker
 {
     /// The marker image to render
     @objc open var image: NSUIImage?

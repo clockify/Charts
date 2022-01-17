@@ -12,16 +12,18 @@
 import Foundation
 
 #if os(iOS) || os(tvOS)
-import UIKit
+#if canImport(UIKit)
+    import UIKit
+#endif
 
 internal func accessibilityPostLayoutChangedNotification(withElement element: Any? = nil)
 {
-    UIAccessibility.post(notification: .layoutChanged, argument: element)
+    UIAccessibility.post(notification: UIAccessibility.Notification.layoutChanged, argument: element)
 }
 
 internal func accessibilityPostScreenChangedNotification(withElement element: Any? = nil)
 {
-    UIAccessibility.post(notification: .screenChanged, argument: element)
+    UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: element)
 }
 
 /// A simple abstraction over UIAccessibilityElement and NSAccessibilityElement.
@@ -33,7 +35,7 @@ open class NSUIAccessibilityElement: UIAccessibilityElement
     {
         didSet
         {
-            accessibilityTraits = isHeader ? .header : .none
+            accessibilityTraits = isHeader ? UIAccessibilityTraits.header : UIAccessibilityTraits.none
         }
     }
 
@@ -41,14 +43,14 @@ open class NSUIAccessibilityElement: UIAccessibilityElement
         {
         didSet
         {
-            accessibilityTraits = isSelected ? .selected : .none
+            accessibilityTraits = isSelected ? UIAccessibilityTraits.selected : UIAccessibilityTraits.none
         }
     }
 
     override public init(accessibilityContainer container: Any)
     {
         // We can force unwrap since all chart views are subclasses of UIView
-        containerView = container as? UIView
+        containerView = (container as! UIView)
         super.init(accessibilityContainer: container)
     }
 
@@ -95,15 +97,18 @@ extension NSUIView
     open override func index(ofAccessibilityElement element: Any) -> Int
     {
         guard let axElement = element as? NSUIAccessibilityElement else { return NSNotFound }
-        return (accessibilityChildren() as? [NSUIAccessibilityElement])?.firstIndex(of: axElement) ?? NSNotFound
+        return (accessibilityChildren() as? [NSUIAccessibilityElement])?
+            .firstIndex(of: axElement) ?? NSNotFound
     }
 }
 
 #endif
 
 #if os(OSX)
-import AppKit
 
+#if canImport(AppKit)
+import AppKit
+#endif
 
 internal func accessibilityPostLayoutChangedNotification(withElement element: Any? = nil)
 {

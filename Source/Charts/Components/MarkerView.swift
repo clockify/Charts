@@ -17,7 +17,7 @@ import AppKit
 #endif
 
 @objc(ChartMarkerView)
-open class MarkerView: NSUIView, Marker
+open class MarkerView: NSUIView, IMarker
 {
     open var offset: CGPoint = CGPoint()
     
@@ -82,14 +82,15 @@ open class MarkerView: NSUIView, Marker
             options: nil)?[0] as? MarkerView
         #else
         
-        var loadedObjects: NSArray? = NSArray()
+        var loadedObjects = NSArray()
+        let loadedObjectsPointer = AutoreleasingUnsafeMutablePointer<NSArray?>(&loadedObjects)
         
         if bundle.loadNibNamed(
             NSNib.Name(String(describing: self)),
             owner: nil,
-            topLevelObjects: &loadedObjects)
+            topLevelObjects: loadedObjectsPointer)
         {
-            return loadedObjects?[0] as? MarkerView
+            return loadedObjects[0] as? MarkerView
         }
         
         return nil

@@ -14,7 +14,7 @@
 
 #define ITEM_COUNT 12
 
-@interface CombinedChartViewController () <ChartViewDelegate, ChartAxisValueFormatter>
+@interface CombinedChartViewController () <ChartViewDelegate, IChartAxisValueFormatter>
 {
     NSArray<NSString *> *months;
 }
@@ -122,7 +122,7 @@
 {
     if ([key isEqualToString:@"toggleLineValues"])
     {
-        for (NSObject<ChartDataSetProtocol> *set in _chartView.data.dataSets)
+        for (NSObject<IChartDataSet> *set in _chartView.data.dataSets)
         {
             if ([set isKindOfClass:LineChartDataSet.class])
             {
@@ -136,7 +136,7 @@
     
     if ([key isEqualToString:@"toggleBarValues"])
     {
-        for (NSObject<ChartDataSetProtocol> *set in _chartView.data.dataSets)
+        for (NSObject<IChartDataSet> *set in _chartView.data.dataSets)
         {
             if ([set isKindOfClass:BarChartDataSet.class])
             {
@@ -151,7 +151,7 @@
     if ([key isEqualToString:@"removeDataSet"])
     {
         int rnd = (int)arc4random_uniform((float)_chartView.data.dataSetCount);
-        [_chartView.data removeDataSet:[_chartView.data dataSetAtIndex:rnd]];
+        [_chartView.data removeDataSet:[_chartView.data getDataSetByIndex:rnd]];
         [_chartView.data notifyDataChanged];
         [_chartView notifyDataSetChanged];
     }
@@ -313,7 +313,7 @@
     NSLog(@"chartValueNothingSelected");
 }
 
-#pragma mark - AxisValueFormatter
+#pragma mark - IAxisValueFormatter
 
 - (NSString *)stringForValue:(double)value
                         axis:(ChartAxisBase *)axis

@@ -13,7 +13,7 @@ import Foundation
 import CoreGraphics
 
 
-open class ChartBaseDataSet: NSObject, ChartDataSetProtocol, NSCopying
+open class ChartBaseDataSet: NSObject, IChartDataSet, NSCopying
 {
     public required override init()
     {
@@ -24,7 +24,7 @@ open class ChartBaseDataSet: NSObject, ChartDataSetProtocol, NSCopying
         valueColors.append(.labelOrBlack)
     }
     
-    @objc public init(label: String)
+    @objc public init(label: String?)
     {
         super.init()
         
@@ -271,10 +271,35 @@ open class ChartBaseDataSet: NSObject, ChartDataSetProtocol, NSCopying
     
     /// `true` if value highlighting is enabled for this dataset
     open var isHighlightEnabled: Bool { return highlightEnabled }
-        
+    
     /// Custom formatter that is used instead of the auto-formatter if set
-    open lazy var valueFormatter: ValueFormatter = DefaultValueFormatter()
-
+    internal var _valueFormatter: IValueFormatter?
+    
+    /// Custom formatter that is used instead of the auto-formatter if set
+    open var valueFormatter: IValueFormatter?
+    {
+        get
+        {
+            if needsFormatter
+            {
+                return ChartUtils.defaultValueFormatter()
+            }
+            
+            return _valueFormatter
+        }
+        set
+        {
+            if newValue == nil { return }
+            
+            _valueFormatter = newValue
+        }
+    }
+    
+    open var needsFormatter: Bool
+    {
+        return _valueFormatter == nil
+    }
+    
     /// Sets/get a single color for value text.
     /// Setting the color clears the colors array and adds a single color.
     /// Getting will return the first color in the array.
@@ -304,9 +329,6 @@ open class ChartBaseDataSet: NSObject, ChartDataSetProtocol, NSCopying
     
     /// the font for the value-text labels
     open var valueFont: NSUIFont = NSUIFont.systemFont(ofSize: 7.0)
-    
-    /// The rotation angle (in degrees) for value-text labels
-    open var valueLabelAngle: CGFloat = CGFloat(0.0)
     
     /// The form to draw for this dataset in the legend.
     open var form = Legend.Form.default
@@ -396,7 +418,7 @@ open class ChartBaseDataSet: NSObject, ChartDataSetProtocol, NSCopying
         copy.label = label
         copy.axisDependency = axisDependency
         copy.highlightEnabled = highlightEnabled
-        copy.valueFormatter = valueFormatter
+        copy._valueFormatter = _valueFormatter
         copy.valueFont = valueFont
         copy.form = form
         copy.formSize = formSize
@@ -404,7 +426,7 @@ open class ChartBaseDataSet: NSObject, ChartDataSetProtocol, NSCopying
         copy.formLineDashPhase = formLineDashPhase
         copy.formLineDashLengths = formLineDashLengths
         copy.drawValuesEnabled = drawValuesEnabled
-        copy.drawIconsEnabled = drawIconsEnabled
+        copy.drawValuesEnabled = drawValuesEnabled
         copy.iconsOffset = iconsOffset
         copy.visible = visible
         

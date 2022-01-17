@@ -12,7 +12,7 @@
 #import "RadarChartViewController.h"
 #import "ChartsDemo_iOS-Swift.h"
 
-@interface RadarChartViewController () <ChartViewDelegate, ChartAxisValueFormatter>
+@interface RadarChartViewController () <ChartViewDelegate, IChartAxisValueFormatter>
 
 @property (nonatomic, strong) IBOutlet RadarChartView *chartView;
 @property (nonatomic, strong) NSArray<NSString *> *activities;

@@ -12,7 +12,7 @@
 #import "CubicLineChartViewController.h"
 #import "ChartsDemo_iOS-Swift.h"
 
-@interface CubicLineSampleFillFormatter : NSObject <ChartFillFormatter>
+@interface CubicLineSampleFillFormatter : NSObject <IChartFillFormatter>
 {
 }
 @end
@@ -158,7 +158,7 @@
 {
     if ([key isEqualToString:@"toggleFilled"])
     {
-        for (id<LineChartDataSetProtocol> set in _chartView.data.dataSets)
+        for (id<ILineChartDataSet> set in _chartView.data.dataSets)
         {
             set.drawFilledEnabled = !set.isDrawFilledEnabled;
         }
@@ -169,7 +169,7 @@
     
     if ([key isEqualToString:@"toggleCircles"])
     {
-        for (id<LineChartDataSetProtocol> set in _chartView.data.dataSets)
+        for (id<ILineChartDataSet> set in _chartView.data.dataSets)
         {
             set.drawCirclesEnabled = !set.isDrawCirclesEnabled;
         }
@@ -180,7 +180,7 @@
     
     if ([key isEqualToString:@"toggleCubic"])
     {
-        for (id<LineChartDataSetProtocol> set in _chartView.data.dataSets)
+        for (id<ILineChartDataSet> set in _chartView.data.dataSets)
         {
             set.mode = set.mode == LineChartModeCubicBezier ? LineChartModeLinear : LineChartModeCubicBezier;
         }
@@ -191,7 +191,7 @@
     
     if ([key isEqualToString:@"toggleStepped"])
     {
-        for (id<LineChartDataSetProtocol> set in _chartView.data.dataSets)
+        for (id<ILineChartDataSet> set in _chartView.data.dataSets)
         {
             set.mode = set.mode == LineChartModeStepped ? LineChartModeLinear : LineChartModeStepped;
         }
@@ -201,7 +201,7 @@
     
     if ([key isEqualToString:@"toggleHorizontalCubic"])
     {
-        for (id<LineChartDataSetProtocol> set in _chartView.data.dataSets)
+        for (id<ILineChartDataSet> set in _chartView.data.dataSets)
         {
             set.mode = set.mode == LineChartModeCubicBezier ? LineChartModeHorizontalBezier : LineChartModeCubicBezier;
         }

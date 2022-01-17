@@ -13,19 +13,9 @@ let package = Package(
         .library(
             name: "Charts",
             targets: ["Charts"]),
-        .library(
-            name: "ChartsDynamic",
-            type: .dynamic,
-            targets: ["Charts"])
-    ],
-    dependencies: [
-        .package(url: "https://github.com/apple/swift-algorithms", from: "0.0.1")
     ],
     targets: [
-        .target(
-            name: "Charts",
-            dependencies: [.product(name: "Algorithms", package: "swift-algorithms")]
-        )
+        .target(name: "Charts")
     ],
     swiftLanguageVersions: [.v5]
 )
