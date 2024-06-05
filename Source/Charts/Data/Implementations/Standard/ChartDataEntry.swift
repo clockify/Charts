@@ -15,7 +15,8 @@ open class ChartDataEntry: ChartDataEntryBase, NSCopying
 {
     /// the x value
     @objc open var x = 0.0
-    
+    open var barCornerRadiusEnabled: Bool = false
+
     public required init()
     {
         super.init()
